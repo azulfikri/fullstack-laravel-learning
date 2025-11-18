@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 
 class UsersController extends Controller
@@ -11,55 +12,14 @@ class UsersController extends Controller
      */
     public function index()
     {
-        $card = [
-            [
-                'header' => 'ini adalah header card 1',
-                'content' => 'ini adalah content card 1',
-                'footer' => 'ini adalah footer card 1',
-            ],
-            [
-                'header' => 'ini adalah header card 2',
-                'content' => 'ini adalah content card 2',
-                'footer' => 'ini adalah footer card 2',
-            ],
-            [
-                'header' => 'ini adalah header card 3',
-                'content' => 'ini adalah content card 3',
-                'footer' => 'ini adalah footer card 3',
-            ],
-        ];
 
-        $dataTable = [
-            [
-                'id' => 1,
-                'name' => 'John Doe',
-                'email' => 'john@example.com',
-                'photo' => 'https://randomuser.me/api/portraits/men/1.jpg',
-                'balance' => 1000000,
-                'status' => 'active',
-                'birth' => '2023-01-15',
-            ],
-            [
-                'id' => 2,
-                'name' => 'Jane Smith',
-                'email' => 'jane@example.com',
-                'photo' => 'https://randomuser.me/api/portraits/men/2.jpg',
-                'balance' => 200000,
-                'status' => 'inactive',
-                'birth' => '2023-02-20',
-            ],
-            [
-                'id' => 3,
-                'name' => 'Alice Johnson',
-                'email' => 'alice@example.com',
-                'photo' => 'https://randomuser.me/api/portraits/men/3.jpg',
-                'balance' => '2000000',
-                'status' => 'active',
-                'birth' => '2023-03-10',
-            ],
-        ];
+        $users = DB::table('users')->select('id', 'name', 'email')->get();
 
-        return view('welcome', compact('card', 'dataTable'));
+        $dataTable = $users->map(function ($user) {
+            return (array) $user;
+        })->toArray();
+
+        return view('pages.users.index', compact('users', 'dataTable'));
     }
 
     /**
@@ -67,7 +27,7 @@ class UsersController extends Controller
      */
     public function create()
     {
-        //
+        return view('pages.users.create');
     }
 
     /**
@@ -75,7 +35,13 @@ class UsersController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        DB::table('users')->insert([
+            'name' => $request->input('name'),
+            'email' => $request->input('email'),
+            'password' => bcrypt($request->input('password')),
+        ]);
+
+        return redirect()->route('users.list');
     }
 
     /**
@@ -91,7 +57,11 @@ class UsersController extends Controller
      */
     public function edit(string $id)
     {
-        //
+        $user = DB::table('users')->where('id', $id)->first();
+
+        $existingUser = $user ? (array) $user : null;
+
+        return view('pages.users.edit', compact('existingUser'));
     }
 
     /**
@@ -99,7 +69,13 @@ class UsersController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        
+        DB::table('users')->where('id', $id)->update([
+            'name' => $request->input('name'),
+            'email' => $request->input('email'),
+        ]);
+
+        return redirect()->route('users.list');
     }
 
     /**
@@ -107,6 +83,8 @@ class UsersController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        DB::table('users')->where('id', $id)->delete();
+        
+        return redirect()->route('users.list');
     }
 }

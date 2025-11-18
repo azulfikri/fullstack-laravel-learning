@@ -22,22 +22,16 @@
     <body class="bg-[#FDFDFC] dark:bg-[#0a0a0a] text-[#1b1b18] flex p-6 lg:p-8 items-center min-h-screen flex-col">
 
         <x-data-table 
-            :headers="['ID', 'Name', 'Email', 'Photo', 'Balance', 'Status', 'Birth']"
+            :headers="['ID', 'Title', 'Content']"
             :items="$dataTable"
 
             creatable="true"
             editable="true"
             deletable="true"
 
-            createRoute="users.create"
-            editRoute="users.edit"
-            deleteRoute="users.delete"
-            :formatters="[
-                'photo' => 'components.partials.tableFormat.image',
-                'balance' => 'components.partials.tableFormat.currency',
-                'status' => 'components.partials.tableFormat.badge',
-                'birth' => 'components.partials.tableFormat.date',
-            ]"
+            createRoute="posts.create"
+            editRoute="posts.edit"
+            deleteRoute="posts.delete"
         />
 
         @if (Route::has('login'))

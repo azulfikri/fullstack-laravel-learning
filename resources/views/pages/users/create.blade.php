@@ -21,23 +21,15 @@
     </head>
     <body class="bg-[#FDFDFC] dark:bg-[#0a0a0a] text-[#1b1b18] flex p-6 lg:p-8 items-center min-h-screen flex-col">
 
-        <x-data-table 
-            :headers="['ID', 'Name', 'Email', 'Photo', 'Balance', 'Status', 'Birth']"
-            :items="$dataTable"
-
-            creatable="true"
-            editable="true"
-            deletable="true"
-
-            createRoute="users.create"
-            editRoute="users.edit"
-            deleteRoute="users.delete"
-            :formatters="[
-                'photo' => 'components.partials.tableFormat.image',
-                'balance' => 'components.partials.tableFormat.currency',
-                'status' => 'components.partials.tableFormat.badge',
-                'birth' => 'components.partials.tableFormat.date',
+        <x-form-component
+            :fields="[
+                'name' => ['label' => 'Name', 'type' => 'text'],
+                'email' => ['label' => 'Email', 'type' => 'email'],
+                'password' => ['label' => 'Password', 'type' => 'password'],
             ]"
+            :action="route('users.store')"
+            method="POST"
+            submitText="Simpan User"
         />
 
         @if (Route::has('login'))

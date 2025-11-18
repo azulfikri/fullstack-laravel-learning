@@ -1,13 +1,9 @@
 <?php
 
 use App\Http\Controllers\UsersController;
+use App\Http\Controllers\PostsController;
 use App\Http\Controllers\SendMessage;
 use Illuminate\Support\Facades\Route;
-
-// Route::get('/', [UsersController::class, 'index']);
-// Route::resource('/', UsersController::class)->only([
-//     'index', 'show'
-// ]);
 
 Route::resource('users', UsersController::class)->names([
     'index' => 'users.list',
@@ -17,20 +13,12 @@ Route::resource('users', UsersController::class)->names([
     'destroy' => 'users.delete',
 ]);
 
+Route::resource('posts', PostsController::class)->names([
+    'index' => 'posts.list',
+    'show' => 'posts.detail',
+    'create' => 'posts.create',
+    'edit' => 'posts.edit',
+    'destroy' => 'posts.delete',
+]);
+
 Route::post('/send-message', SendMessage::class)->name('send.message');
-
-// Route::get('/about', function () {
-//     return view('about');
-// });
-
-// Route::get('/users/create', function () {
-//     return "User Create Page";
-// })->name('users.create');
-
-// Route::get('/users/{id}/edit', function ($id) {
-//     return "Edit User with ID: " . $id;
-// })->name('users.edit');
-
-// Route::delete('/users/{id}', function ($id) {
-//     return "Delete User with ID: " . $id;
-// })->name('users.delete');
